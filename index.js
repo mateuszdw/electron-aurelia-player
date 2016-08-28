@@ -5,8 +5,9 @@
 'use strict';
 
 const electron = require('electron');
-const {app} = electron;
-const {BrowserWindow} = electron;
+const remote = electron.remote;
+const {app, BrowserWindow, Menu, Tray} = electron;
+
 let mainWindow;
 
 app.on('window-all-closed', () => {
@@ -16,11 +17,12 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
+
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600
   });
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
   mainWindow.webContents.on('did-finish-load', () => {
@@ -30,4 +32,36 @@ app.on('ready', () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  // let tray = new Tray('./favicon.ico')
+  // const contextMenu = Menu.buildFromTemplate([
+  //   {label: 'Item3', type: 'radio', checked: true},
+  //   {label: 'Item4', type: 'radio'}
+  // ])
+  // tray.setToolTip('This is my application.')
+  // tray.setContextMenu(contextMenu)
+
+  // (function() {
+  //
+  //     document.getElementById("min-btn").addEventListener("click", function (e) {
+  //          var window = remote.getCurrentWindow();
+  //          window.minimize();
+  //     });
+  //
+  //     document.getElementById("max-btn").addEventListener("click", function (e) {
+  //          var window = remote.getCurrentWindow();
+  //          if (!window.isMaximized()) {
+  //              window.maximize();
+  //          } else {
+  //              window.unmaximize();
+  //          }
+  //     });
+  //
+  //     document.getElementById("close-btn").addEventListener("click", function (e) {
+  //          var window = remote.getCurrentWindow();
+  //          window.close();
+  //     });
+  //
+  // })();
+
 });

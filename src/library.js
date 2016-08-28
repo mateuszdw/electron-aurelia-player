@@ -29,6 +29,7 @@ export class Library {
     })
 
     this.db.cfind({}).sort({ artist: 1, album: 1 }).exec().then(files => {
+      console.debug(files);
       this.files = files;
     })
 
@@ -108,12 +109,15 @@ export class Library {
       // console.log('files:\n',paths.files);
       // console.log('subdirs:\n', paths.dirs);
     }).then(paths => {
+
       for(let f = 0; f < paths.length; f++) {
         this.getFileId3(paths[f]).then(info => {
           // console.debug(info.picture[]);
-          this.db.update({path: paths[f]},{path: paths[f], artist: info.artist, album: info.album, song: info.title}, { upsert: true }).then((numReplaced, upsert) => {
-            // console.debug(numReplaced, upsert);
-            this.files.push({artist: info.artist, album: info.album, song: info.title, path: paths[f]})
+          this.db.update({path: paths[f]},{path: paths[f], artist: info.artist, album: info.album, song: info.title}, { upsert: true }).then((results) => {
+            if(typeof(results) == "object"){
+                let result = results[1] // new record results
+                this.files.push(result)
+            }
           }).catch(function(e) {
               console.error(e.stack);
           });

@@ -1,5 +1,5 @@
 var appRoot = 'src/';
-var outputRoot = 'dist/';
+var outputRoot = 'app/';
 var exportSrvRoot = 'export/';
 
 module.exports = {

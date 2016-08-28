@@ -25,7 +25,7 @@
     "dev": "NODE_ENV='development' npm run start",
     "pack": "build --dir",
     "dist": "build -l --x64 --ia32",
-    "start": "electron ./ --enable-logging"
+    "start": "electron ./app --enable-logging"
   },
   "build": {
     "appId": "hr.mattdw.player",
