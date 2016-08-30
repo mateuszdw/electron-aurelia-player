@@ -6,14 +6,18 @@
         <div class="navbar-header">
 
           <form class="navbar-form navbar-left">
+            <span class="label label-primary">${files.length}</span>
             <span class="btn btn-primary btn-file">
-              Find music on your computer <input type="file" webkitdirectory multiple change.delegate="selectedFiles($event)">
+              Find music on local drive <input type="file" webkitdirectory multiple change.delegate="selectedFiles($event)">
             </span>
+             &nbsp;
             <a class="btn btn-default" click.delegate="clearPlaylist()">clear library</a>
             <require from="valueconverters/properties"></require>
-            <input type="text" value.bind="searchPhrase" class="form-control" />
-          </form>
 
+          </form>
+          <form class="navbar-form navbar-right">
+            <input type="text" value.bind="searchPhrase" class="form-control" placeholder="Search library..." />
+          </form>
         </div>
       </div>
     </nav>
@@ -22,7 +26,7 @@
       <li repeat.for="file of files | filterOnProperty:'artist':searchPhrase" click.delegate="playPath(file)" class="list-group-item ${file._id === selectedId ? 'active' : ''}">
         <!-- <img width="50px" height="50px" src.bind="file.cover" /> -->
         <!-- <span class="fa fa-play"></span> -->
-        ${file.artist} - ${file.album} - ${file.song}
+        ${file.artist} - ${file.album} - ${file.song} - ${file.dur}
       </li>
     </ul>
   </div>

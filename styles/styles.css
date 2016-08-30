@@ -182,11 +182,33 @@ my custom styles
 
 */
 
+audio {
+  width: 400px;
+  margin-top:9px;
+  display:block;
+}
+
+.player-controls a {
+  cursor: pointer;
+  font-size:20px;
+  padding:15px 5px;
+}
+
+.player-controls a:hover {
+  text-decoration: none;
+}
+
 .container-fluid {
   /*margin-top:15px;*/
 }
 
+ul#library li {
+  cursor: pointer;
+}
+
 ul#library li.active {
+  border:0;
+  color: #444;
   background-color: #ddd;
 }
 

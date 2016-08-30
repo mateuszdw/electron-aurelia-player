@@ -1,22 +1,22 @@
 import {customElement, bindable, inject} from 'aurelia-framework';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {PlayerPlay, PlayerNext, PlayerPrev} from '../events';
-// @bindable('play')
-// @bindable('playPath')
+
 @inject(Element, EventAggregator)
 export class Player {
-  @bindable playPath;
+  @bindable playFile;
 
   constructor(element, ea){
     this.element = element;
     this.ea = ea;
 
     ea.subscribe(PlayerPlay, event => {
-      this.playPath = event.file.path;
-
-      // this is kind'a fix, changing playPath not trigger audio load/play
-      $(this.element).find('audio').load();
+      this.playFile = event.file;
     });
+
+    this.handlePlayerEnded = () => {
+         this.playNext();
+    };
   }
 
   playPrev(){
@@ -27,10 +27,16 @@ export class Player {
     this.ea.publish(new PlayerNext());
   }
 
-  // playChanged(newValue){
-  //   console.debug(newValue);
-  //   this.playPath = newValue;
-  //   // $(this.element.$children).attr('src', this.play)
-  // }
+  attached(){
+    $(this.element).find('audio').on('ended', this.handlePlayerEnded);
+  }
+
+  detached(){
+    $(this.element).find('audio').off('ended', this.handlePlayerEnded);
+  }
+
+  playFileChanged(newValue){
+    $(this.element).find('audio').load();
+  }
 
 }

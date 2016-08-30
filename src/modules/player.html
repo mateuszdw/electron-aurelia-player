@@ -1,9 +1,14 @@
 <template>
-  <audio controls autoplay>
-    <source src.bind="playPath" type="audio/ogg">
-    <source src.bind="playPath" type="audio/mpeg">
-  </audio>
-  <a class="fa fa-step-backward" click.delegate="playPrev()"></a>
-  <a class="fa fa-step-forward" click.delegate="playNext()"></a>
-
+  <div class="row">
+    <div class="col-xs-10">
+      <audio controls autoplay>
+        <source if.bind="playFile.path" src.bind="playFile.path" type="audio/ogg">
+        <source if.bind="playFile.path" src.bind="playFile.path" type="audio/mpeg">
+      </audio>
+    </div>
+    <div class="player-controls col-xs-2">
+      <a class="fa fa-step-backward" click.delegate="playPrev()"></a>
+      <a class="fa fa-step-forward" click.delegate="playNext()"></a>
+    </div>
+  </div>
 </template>

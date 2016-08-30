@@ -3,7 +3,6 @@ import {inject} from 'aurelia-framework';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {PlayerPlay, PlayerNext, PlayerPrev} from './events';
 
-// import {areEqual} from './utility';
 import {HttpClient} from 'aurelia-fetch-client';
 import 'fetch';
 import FS from 'fs';
@@ -29,28 +28,9 @@ export class Library {
     })
 
     this.db.cfind({}).sort({ artist: 1, album: 1 }).exec().then(files => {
-      console.debug(files);
       this.files = files;
     })
 
-  }
-
-  activate(){
-
-  }
-
-  clearPlaylist(){
-    this.db.remove({}, { multi: true }).then(results => {
-      this.files = [];
-    })
-
-  }
-
-  playPath(file){
-    this.ea.publish(new PlayerPlay(file));
-    this.selectedId = file._id;
-    // temp get cover
-    // this.getFileCover(file);
   }
 
   // this should go to separate file
@@ -63,18 +43,9 @@ export class Library {
       })
   }
 
-  // getFileId3(filePath){
-  //   return new Promise( (resolve, reject) => {
-  //     ID3({ file: filePath, type: ID3.OPEN_LOCAL}, (err, tags) => {
-  //         if (err) reject(err);
-  //         resolve(tags);
-  //     });
-  //   })
-  // }
-
   getFileId3(filePath){
     return new Promise( (resolve, reject) => {
-      ID3(FS.createReadStream(filePath), { duration: true }, (err, tags) => {
+      ID3(FS.createReadStream(filePath), { duration: false }, (err, tags) => {
           if (err) reject(err);
           resolve(tags);
       });
@@ -97,6 +68,20 @@ export class Library {
     return true;
   }
 
+  getFileId3AndInsert(filePath){
+    return this.getFileId3(filePath).then((info) => {
+      return this.db.update({path: filePath},
+        {path: filePath,
+          artist: info.artist,
+          album: info.album,
+          song: info.title,
+          dur: info.duration
+        }, { upsert: true })
+    }).catch((e)=> {
+      console.debug('error: ' + e + ' in ' + filePath)
+    })
+  }
+
   selectedFiles(evt){
     if (evt.target.files.length <= 0) {
       return false;
@@ -107,27 +92,32 @@ export class Library {
         return (/\.(?:wav|mp3|ogg|oga|aac)$/i).test(file);
       });
       // console.log('files:\n',paths.files);
-      // console.log('subdirs:\n', paths.dirs);
-    }).then(paths => {
-
-      for(let f = 0; f < paths.length; f++) {
-        this.getFileId3(paths[f]).then(info => {
-          // console.debug(info.picture[]);
-          this.db.update({path: paths[f]},{path: paths[f], artist: info.artist, album: info.album, song: info.title}, { upsert: true }).then((results) => {
-            if(typeof(results) == "object"){
-                let result = results[1] // new record results
-                this.files.push(result)
-            }
-          }).catch(function(e) {
-              console.error(e.stack);
-          });
-
+    }).then(audioPaths => {
+        // using Bluebird's Promise.map
+      Promise.map(audioPaths, path => {
+        return this.getFileId3AndInsert(path).then((results) => {
+          if(typeof(results) == "object"){
+              let result = results[1] // new record results
+              this.files.push(result)
+          }
         })
-      }
+      }, {concurrency: 2})
+
     })
   }
 
-/* helpers */
+
+  clearPlaylist(){
+    this.db.remove({}, { multi: true }).then(results => {
+      this.files = [];
+    })
+
+  }
+
+  playPath(file){
+    this.ea.publish(new PlayerPlay(file));
+    this.selectedId = file._id;
+  }
 
   playNext(){
     for (var i = 0; i < this.files.length; i++) {
