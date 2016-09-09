@@ -111,15 +111,6 @@
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4"
-    },
-    "overrides": {
-      "npm:jquery@3.1.0": {
-        "directories": {
-          "lib": "dist"
-        },
-        "main": "jquery.min",
-        "format": "amd"
-      }
     }
   }
 }

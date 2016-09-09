@@ -45,7 +45,10 @@ export class Library {
 
   getFileId3(filePath){
     return new Promise( (resolve, reject) => {
-      ID3(FS.createReadStream(filePath), { duration: false }, (err, tags) => {
+      var fileSize = FS.statSync(filePath).size;
+      var stream = FS.createReadStream(filePath)
+      ID3(stream, { duration: false, fileSize: fileSize}, (err, tags) => {
+          stream.destroy()
           if (err) reject(err);
           resolve(tags);
       });
@@ -101,7 +104,7 @@ export class Library {
               this.files.push(result)
           }
         })
-      }, {concurrency: 2})
+      }, {concurrency: 1})
 
     })
   }
