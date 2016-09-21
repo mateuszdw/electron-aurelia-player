@@ -32,6 +32,7 @@ System.config({
     "fs": "github:jspm/nodelibs-fs@0.1.2",
     "id3js": "npm:id3js@1.1.3",
     "jquery": "npm:jquery@3.1.0",
+    "moment": "npm:moment@2.15.1",
     "musicmetadata": "npm:musicmetadata@2.0.4",
     "nedb": "npm:nedb@1.8.0",
     "nedb-promise": "npm:nedb-promise@2.0.0",

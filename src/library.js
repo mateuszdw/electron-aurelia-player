@@ -14,6 +14,7 @@ import ID3 from 'musicmetadata'; // no need to inject
 export class Library {
   files = [];
   selectedId = null;
+  selectedFilesCount = null;
   constructor(http,fspath, db, ea) {
     this.fspath = fspath;
     this.db = db;
@@ -27,7 +28,7 @@ export class Library {
       this.playPrev()
     })
 
-    this.db.cfind({}).sort({ artist: 1, album: 1 }).exec().then(files => {
+    this.db.cfind({}).sort({ artist: 1, album: 1, disk: 1, no: 1 }).exec().then(files => {
       this.files = files;
     })
 
@@ -78,7 +79,9 @@ export class Library {
           artist: info.artist,
           album: info.album,
           song: info.title,
-          dur: info.duration
+          dur: info.duration,
+          no: info.track.no,
+          disk: info.disk.no
         }, { upsert: true })
     }).catch((e)=> {
       console.debug('error: ' + e + ' in ' + filePath)
@@ -96,7 +99,8 @@ export class Library {
       });
       // console.log('files:\n',paths.files);
     }).then(audioPaths => {
-        // using Bluebird's Promise.map
+      this.selectedFilesCount = audioPaths.length;
+      // using Bluebird's Promise.map
       Promise.map(audioPaths, path => {
         return this.getFileId3AndInsert(path).then((results) => {
           if(typeof(results) == "object"){
@@ -105,6 +109,9 @@ export class Library {
           }
         })
       }, {concurrency: 1})
+      .then(() => {
+        this.selectedFilesCount = null
+      })
 
     })
   }

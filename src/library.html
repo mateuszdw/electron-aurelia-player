@@ -1,4 +1,7 @@
 <template>
+  <require from="valueconverters/properties"></require>
+  <require from="valueconverters/date-format"></require>
+
   <div class="container-fluid">
 
     <nav class="navbar navbar-default">
@@ -6,14 +9,12 @@
         <div class="navbar-header">
 
           <form class="navbar-form navbar-left">
-            <span class="label label-primary">${files.length}</span>
+            <span class="label label-primary">${files.length}<span if.bind="selectedFilesCount"> / ${selectedFilesCount}</span></span>
             <span class="btn btn-primary btn-file">
-              Find music on local drive <input type="file" webkitdirectory multiple change.delegate="selectedFiles($event)">
+              Load from local drive <input type="file" webkitdirectory multiple change.delegate="selectedFiles($event)">
             </span>
              &nbsp;
-            <a class="btn btn-default" click.delegate="clearPlaylist()">clear library</a>
-            <require from="valueconverters/properties"></require>
-
+            <a class="btn btn-default" click.delegate="clearPlaylist()">Clear library</a>
           </form>
           <form class="navbar-form navbar-right">
             <input type="text" value.bind="searchPhrase" class="form-control" placeholder="Search library..." />
@@ -23,10 +24,12 @@
     </nav>
 
     <ul id="library" class="list-group">
-      <li repeat.for="file of files | filterOnProperty:'artist':searchPhrase" click.delegate="playPath(file)" class="list-group-item ${file._id === selectedId ? 'active' : ''}">
+      <li repeat.for="file of files | filterOnProperty:'artist':searchPhrase"
+          click.delegate="playPath(file)"
+          class="list-group-item ${file._id === selectedId ? 'active' : ''}">
         <!-- <img width="50px" height="50px" src.bind="file.cover" /> -->
         <!-- <span class="fa fa-play"></span> -->
-        ${file.artist} - ${file.album} - ${file.song} - ${file.dur}
+        ${file.no}. ${file.artist} - ${file.album} - ${file.song} - <span class="text-muted">${file.dur * 1000 | dateFormat: 'mm:ss'}</span>
       </li>
     </ul>
   </div>
