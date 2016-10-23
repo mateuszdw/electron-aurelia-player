@@ -2,35 +2,48 @@
   <require from="valueconverters/properties"></require>
   <require from="valueconverters/date-format"></require>
 
-  <div class="container-fluid">
-
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-
-          <form class="navbar-form navbar-left">
-            <span class="label label-primary">${files.length}<span if.bind="selectedFilesCount"> / ${selectedFilesCount}</span></span>
-            <span class="btn btn-primary btn-file">
-              Load from local drive <input type="file" webkitdirectory multiple change.delegate="selectedFiles($event)">
-            </span>
-             &nbsp;
-            <a class="btn btn-default" click.delegate="clearPlaylist()">Clear library</a>
-          </form>
-          <form class="navbar-form navbar-right">
-            <input type="text" value.bind="searchPhrase" class="form-control" placeholder="Search library..." />
-          </form>
-        </div>
+    <nav class="navbar navbar-default subpage-navbar">
+      <div class="navbar-header">
+        <form class="navbar-form navbar-left">
+          <span class="label label-primary">${files.length}<span if.bind="selectedFilesCount"> / ${selectedFilesCount}</span></span>
+          <span class="btn btn-primary btn-file">
+            Load from local drive <input type="file" webkitdirectory multiple change.delegate="selectedFiles($event)">
+          </span>
+           &nbsp;
+          <a class="btn btn-default" click.delegate="clearPlaylist()">Clear library</a>
+        </form>
+        <form class="navbar-form navbar-right">
+          <input type="text" value.bind="searchPhrase" class="form-control" placeholder="Search library..." />
+        </form>
       </div>
     </nav>
-
-    <ul id="library" class="list-group">
-      <li repeat.for="file of files | filterOnProperties:'artist,album,song':searchPhrase"
-          click.delegate="playPath(file)"
-          class="list-group-item ${file._id === selectedId ? 'active' : ''}">
-        <!-- <img width="50px" height="50px" src.bind="file.cover" /> -->
-        <!-- <span class="fa fa-play"></span> -->
-        ${file.no}. ${file.artist} - ${file.album} - ${file.song} - <span class="text-muted">${file.dur * 1000 | dateFormat: 'mm:ss'}</span>
-      </li>
-    </ul>
-  </div>
+    
+    <div class="subpage-content container-fluid">
+      <table id="library" class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Song</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th><i class="fa fa-clock-o"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr repeat.for="file of files | filterOnProperties:'artist,album,song':searchPhrase"
+              click.delegate="playPath(file)"
+              class="${file._id === selectedId ? 'active' : ''}">
+            <!-- <img width="50px" height="50px" src.bind="file.cover" /> -->
+            <!-- <span class="fa fa-play"></span> -->
+            <td>${file.no}</td>
+            <td>${file.song}</td>
+            <td>${file.artist}</td>
+            <td>${file.album}</td>
+            <td>
+              <span class="text-muted">${file.dur * 1000 | dateFormat: 'm:ss'}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 </template>

@@ -34,6 +34,11 @@ export class Library {
 
   }
 
+  activate(){
+    // TODO assign selectedId library row for played song , when back from another tab
+    console.debug('activate')
+  }
+
   // this should go to separate file
   getFilePaths(dirPath){
     return new Promise( (resolve, reject) => {

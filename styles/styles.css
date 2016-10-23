@@ -4,6 +4,14 @@ body {
   box-shadow: inset 0 0 10px rgba(0, 0, 0, .7);*/
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #AAA;
+}
+
 .splash {
   text-align: center;
   margin: 10% 0 0 0;
@@ -45,6 +53,23 @@ body {
     overflow-y: inherit;
     overflow-x: inherit;
   }
+}
+
+.page-host .subpage-navbar {
+  position: fixed;
+  right: 0;
+  left: 0;
+  /*z-index: 1030;*/
+}
+
+.page-host .subpage-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50px;
+  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 section {
@@ -183,9 +208,9 @@ my custom styles
 */
 
 audio {
-  width: 400px;
   margin-top:9px;
   display:block;
+  min-width:380px
 }
 
 .player-controls a {
@@ -198,18 +223,13 @@ audio {
   text-decoration: none;
 }
 
-.container-fluid {
-  /*margin-top:15px;*/
-}
-
-ul#library li {
+#library tbody tr {
   cursor: pointer;
 }
 
-ul#library li.active {
-  border:0;
-  color: #444;
-  background-color: #ddd;
+#library tbody tr.active > td, #library tbody tr.active span {
+  color: #fff;
+  background-color: #337ab7;
 }
 
 .btn-file {
@@ -230,4 +250,91 @@ ul#library li.active {
     background: white;
     cursor: inherit;
     display: block;
+}
+
+
+.media-object.img-responsive {
+  min-height:32px;
+  min-width:32px;
+}
+
+.search-results {
+  width:30%;
+}
+
+.bs-callout {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+.bs-callout code {
+    border-radius: 3px;
+}
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+.bs-callout-default {
+    border-left-color: #444;
+}
+.bs-callout-default h4 {
+    color: #777;
+}
+.bs-callout-primary {
+    border-left-color: #428bca;
+}
+.bs-callout-primary h4 {
+    color: #428bca;
+}
+.bs-callout-success {
+    border-left-color: #5cb85c;
+}
+.bs-callout-success h4 {
+    color: #5cb85c;
+}
+.bs-callout-danger {
+    border-left-color: #d9534f;
+}
+.bs-callout-danger h4 {
+    color: #d9534f;
+}
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+.bs-callout-warning h4 {
+    color: #f0ad4e;
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout-info h4 {
+    color: #5bc0de;
+}
+
+.sidebar-content {
+  padding-left:25%;
+  transition: all 0.5s ease;
+}
+
+.sidebar-wrapper {
+  z-index: 1000;
+  position: fixed;
+  left: 250px;
+  width: 25%;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  border-right: 2px solid #ccc;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }

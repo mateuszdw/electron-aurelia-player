@@ -1,0 +1,73 @@
+<template>
+  <require from="blur-image"></require>
+  <require from="valueconverters/date-format"></require>
+
+  <nav class="navbar navbar-default subpage-navbar">
+    <div class="navbar-header">
+      <form class="navbar-form">
+        <input type="text" value.bind="searchPhrase & debounce:650" class="form-control" placeholder="Search music on web..." />
+      </form>
+    </div>
+  </nav>
+  <div class="subpage-content container-fluid">
+    <div class="sidebar-content toggle">
+      <div class="search-results sidebar-wrapper">
+        <div class="bs-callout" if.bind="searchResults.artists.items.length > 0">
+          <h4 class="text-muted">Artists</h4>
+          <div class="media" repeat.for="artist of searchResults.artists.items" click.delegate="getArtistAlbumsAndTracks(artist.id)">
+            <div class="media-left media-middle">
+              <img if.bind="artist.images[2]['url']" src.bind="artist.images[2]['url']" class="media-object img-responsive" />
+              <i if.bind="!artist.images[2]['url']" class="fa fa-star-o media-object"></i>
+            </div>
+            <div class="media-body">${artist.name}</div>
+          </div>
+        </div>
+
+        <div class="bs-callout" if.bind="searchResults.albums.items.length > 0">
+          <h4 class="text-muted">Albums</h4>
+          <div class="media" repeat.for="album of searchResults.albums.items">
+            <div class="media-left media-middle">
+              <img if.bind="album.images[2]['url']" src.bind="album.images[2]['url']" class="media-object img-responsive" />
+              <i if.bind="!album.images[2]['url']" class="fa fa-circle-o media-object"></i>
+            </div>
+            <div class="media-body">${album.name}</div>
+          </div>
+        </div>
+
+        <div class="bs-callout" if.bind="searchResults.tracks.items.length > 0">
+          <h4 class="text-muted">Tracks</h4>
+          <div class="media" repeat.for="track of searchResults.tracks.items">
+            <div class="media-left media-middle">
+              <img if.bind="track.images[2]['url']" src.bind="track.images[2]['url']" class="media-object img-responsive" />
+              <i if.bind="!track.images[2]['url']" class="fa fa-music media-object"></i>
+            </div>
+            <div class="media-body">${track.name}</div>
+          </div>
+        </div>
+      </div>
+
+      <table id="library" class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Song</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th><i class="fa fa-clock-o"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr repeat.for="item of musicResults.tracks" click.delegate="">
+            <td>${item.track_number}</td>
+            <td>${item.name}</td>
+            <td>${item.artists[0].name}</td>
+            <td>${item.album.name}</td>
+            <td>
+              <span class="text-muted">${item.duration_ms * 1000 | dateFormat: 'm:ss'}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
